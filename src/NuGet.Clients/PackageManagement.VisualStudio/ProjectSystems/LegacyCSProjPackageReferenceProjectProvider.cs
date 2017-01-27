@@ -6,8 +6,8 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.ProjectSystem.Properties;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Utilities;
+using NuGet.PackageManagement.UI;
 using NuGet.ProjectManagement;
-using VSLangProj150;
 using ProjectSystem = Microsoft.VisualStudio.ProjectSystem;
 
 namespace NuGet.PackageManagement.VisualStudio
@@ -19,15 +19,25 @@ namespace NuGet.PackageManagement.VisualStudio
     {
         private readonly IProjectSystemCache _projectSystemCache;
 
+        private readonly ProjectSystem.IProjectServiceAccessor _projectServiceAccessor;
+
         [ImportingConstructor]
-        public LegacyCSProjPackageReferenceProjectProvider(IProjectSystemCache projectSystemCache)
+        public LegacyCSProjPackageReferenceProjectProvider(
+            IProjectSystemCache projectSystemCache,
+            ProjectSystem.IProjectServiceAccessor projectServiceAccessor)
         {
             if (projectSystemCache == null)
             {
                 throw new ArgumentNullException(nameof(projectSystemCache));
             }
 
+            if (projectServiceAccessor == null)
+            {
+                throw new ArgumentNullException(nameof(projectServiceAccessor));
+            }
+
             _projectSystemCache = projectSystemCache;
+            _projectServiceAccessor = projectServiceAccessor;
         }
         
         public bool TryCreateNuGetProject(EnvDTE.Project dteProject, ProjectSystemProviderContext context, out NuGetProject result)
@@ -51,6 +61,9 @@ namespace NuGet.PackageManagement.VisualStudio
             {
                 return false;
             }
+
+            // Lazy load the CPS enabled JoinableTaskFactory for the UI.
+            NuGetUIThreadHelper.SetJoinableTaskFactoryFromService(_projectServiceAccessor);
 
             result = new LegacyCSProjPackageReferenceProject(
                 project,
