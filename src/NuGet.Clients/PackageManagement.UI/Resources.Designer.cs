@@ -1422,6 +1422,15 @@ namespace NuGet.PackageManagement.UI {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blocked by project.
+        /// </summary>
+        public static string Version_Blocked_Generic {
+            get {
+                return ResourceManager.GetString("Version_Blocked_Generic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installed.
         /// </summary>
         public static string Version_Installed {

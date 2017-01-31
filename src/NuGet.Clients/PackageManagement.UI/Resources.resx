@@ -617,4 +617,7 @@ Packages installed into Website projects will not be restored during build. Cons
   <data name="Text_PackageFormatApply" xml:space="preserve">
     <value>The package manager format will apply to the following projects in this Solution</value>
   </data>
+  <data name="Version_Blocked_Generic" xml:space="preserve">
+    <value>Blocked by project</value>
+  </data>
 </root>
